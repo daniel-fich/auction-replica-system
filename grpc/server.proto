@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package proto;
+
+option go_package = "grpc/proto";
+
+enum ErrorCode {
+    FAIL = 0;
+    SUCCESS = 1;
+    EXCEPTION = 2;
+}
+
+enum OutcomeType {
+    RESULT = 0;
+    HIGHEST_BID = 1;
+}
+
+// Types for bid
+message Amount {
+    int64 amount = 1;
+} 
+
+message Ack {
+    ErrorCode errorCode = 1;
+}
+
+// Types for result
+message EmptyArgument {
+
+}
+
+message Outcome {
+    OutcomeType outcomeType = 1;
+    int64 outcome = 2;
+}
+
+service AuctionService {
+    rpc Bid(Amount) returns (Ack);
+    rpc Result(EmptyArgument) returns (Outcome);
+}
