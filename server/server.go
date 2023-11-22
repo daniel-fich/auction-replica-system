@@ -55,11 +55,9 @@ func main() {
 	}
 
 	go startServer(server)
-	time.Sleep(time.Second)
 	WriteToSharedFile(dockerId, NodesFilename)
 
 	go synchronize()
-	// go CheckPeers()
 
 	for {
 
