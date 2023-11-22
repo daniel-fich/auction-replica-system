@@ -34,5 +34,6 @@ func main() {
 
 			RemoveDockerIdFromFile(removeDockerId, NodesFilename)
 		}
-	// go CheckPeers()
+		// go CheckPeers()
+	}
 }
