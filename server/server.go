@@ -21,6 +21,7 @@ func main() {
 	}
 
 	go startServer(server)
+	time.Sleep(time.Second)
 	WriteToSharedFile(dockerId, NodesFilename)
 
 	for {
@@ -33,5 +34,5 @@ func main() {
 
 			RemoveDockerIdFromFile(removeDockerId, NodesFilename)
 		}
-	}
+	// go CheckPeers()
 }
