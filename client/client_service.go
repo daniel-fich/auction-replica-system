@@ -51,7 +51,7 @@ func getResult(serverId string) (int64, error) {
 	outcome, err := auctionClient.Result(context.Background(), &proto.EmptyArgument{})
 
 	if err != nil {
-		log.Println("Could not get result from server: ", serverId)
+		log.Println("Could not get result from server: ", serverId, " ", err)
 		return 0, errors.New("Could not get result from server: " + serverId)
 	}
 
