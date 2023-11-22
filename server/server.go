@@ -3,6 +3,7 @@ package main
 import (
 	. "auction-replica-system/shared"
 	"os"
+	"time"
 )
 
 var (
@@ -17,7 +18,9 @@ func main() {
 	}
 
 	go startServer(server)
+	time.Sleep(time.Second)
 	WriteToSharedFile(dockerId, NodesFilename)
+	// go CheckPeers()
 
 	for {
 
