@@ -21,7 +21,7 @@ func synchronize() {
 			if backupHostname != dockerId {
 				// ping	id here
 
-				result, err := getResult(backupHostname)
+				result, err := GetResult(backupHostname)
 
 				if err != nil {
 					log.Printf("Failed to get result on hostname %s\n", backupHostname)
@@ -35,7 +35,7 @@ func synchronize() {
 					continue
 				}
 
-				_, err = bidAmount(backupHostname, currentHighest)
+				_, err = BidAmount(backupHostname, currentHighest)
 
 				if err != nil {
 					log.Printf("Failed to backup bid %d on hostname %s\n", currentHighest, backupHostname)
