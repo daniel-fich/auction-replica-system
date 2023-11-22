@@ -22,6 +22,8 @@ services:
       - ./shared_volume:/var/hosts
     networks:
       frontend:
+    links:
+      - server
     deploy:
       mode: replicated
       replicas: 2

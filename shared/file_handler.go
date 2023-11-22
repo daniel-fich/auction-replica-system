@@ -7,6 +7,11 @@ import (
 	"strings"
 )
 
+const (
+	NodesFilename  = "nodes"
+	LeaderFilename = "leader"
+)
+
 func WriteToSharedFile(dockerId string, filename string) {
 	log.Printf("The server ip address is: %s\n", dockerId)
 

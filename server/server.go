@@ -6,7 +6,7 @@ import (
 )
 
 var (
-	// Resolves to ip address
+	// HOSTNAME resolves to ip address
 	dockerId = os.Getenv("HOSTNAME")
 )
 
@@ -16,5 +16,5 @@ func main() {
 	}
 
 	go startServer(server)
-	WriteToSharedFile(dockerId, "hosts")
+	WriteToSharedFile(dockerId, NodesFilename)
 }

@@ -2,16 +2,17 @@ package main
 
 import (
 	. "auction-replica-system/shared"
+	"fmt"
 	"os"
 )
 
 var (
-	// Resolves to ip address
+	// HOSTNAME resolves to ip address
 	dockerId = os.Getenv("HOSTNAME")
 )
 
 func GetLeader() string {
-	fileContents := GetFileContents(dockerId, "leader")
+	fileContents := GetFileContents(dockerId, NodesFilename)
 
 	if len(fileContents) > 0 {
 		return fileContents[0]
@@ -21,5 +22,7 @@ func GetLeader() string {
 }
 
 func main() {
-	_ = GetLeader()
+	test := GetLeader()
+
+	fmt.Println(test)
 }
