@@ -17,7 +17,6 @@ func GetLeader() string {
 	if len(fileContents) > 0 {
 		return fileContents[0]
 	}
-
 	return ""
 }
 

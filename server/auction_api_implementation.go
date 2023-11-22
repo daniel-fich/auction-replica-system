@@ -23,6 +23,9 @@ type Server struct {
 }
 
 func (s *Server) Bid(ctx context.Context, in *proto.Amount) (*proto.Ack, error) {
+	if currentBid.Get() < in.Amount {
+		currentBid.Update(in.Amount)
+	}
 	return &proto.Ack{
 		ErrorCode: proto.ErrorCode_SUCCESS,
 	}, nil
@@ -31,7 +34,7 @@ func (s *Server) Bid(ctx context.Context, in *proto.Amount) (*proto.Ack, error) 
 func (s *Server) Result(ctx context.Context, in *proto.EmptyArgument) (*proto.Outcome, error) {
 	return &proto.Outcome{
 		OutcomeType: proto.OutcomeType_RESULT,
-		Outcome:     0,
+		Outcome:     currentBid.Get(),
 	}, nil
 }
 

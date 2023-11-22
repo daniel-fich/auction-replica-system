@@ -13,14 +13,14 @@ const (
 )
 
 func WriteToSharedFile(dockerId string, filename string) {
-	log.Printf("The server ip address is: %s\n", dockerId)
+	sharedFilePath := GetPath(filename)
 
-	f, err := os.OpenFile(filepath.Join("var", "hosts", filename),
+	f, err := os.OpenFile(sharedFilePath,
 		os.O_APPEND|os.O_CREATE|os.O_WRONLY,
 		0644)
 
 	if err != nil {
-		log.Println("Couldn't open the shared file! On server ", dockerId)
+		log.Println("[WriteToSharedFile] Couldn't open the shared file! On server ", dockerId)
 	}
 	defer f.Close()
 	if _, err := f.WriteString(dockerId + "\n"); err != nil {
@@ -29,12 +29,18 @@ func WriteToSharedFile(dockerId string, filename string) {
 }
 
 func GetFileContents(dockerId string, filename string) []string {
-	f, err := os.OpenFile(filepath.Join("var", "hosts", filename),
+	sharedFilePath := GetPath(filename)
+
+	if _, err := os.Stat(sharedFilePath); os.IsNotExist(err) {
+		log.Println("File does not exist: " + sharedFilePath)
+	}
+
+	f, err := os.OpenFile(sharedFilePath,
 		os.O_RDONLY,
 		0644)
 
 	if err != nil {
-		log.Println("Couldn't open the shared file! On server ", dockerId)
+		log.Println("[GetFileContents] Couldn't open the shared file! On server ", dockerId)
 	}
 	defer f.Close()
 	bytes := make([]byte, 1_000_000)
@@ -48,4 +54,8 @@ func GetFileContents(dockerId string, filename string) []string {
 		strs = strs[:len(strs)-1]
 	}
 	return strs
+}
+
+func GetPath(file string) string {
+	return filepath.FromSlash("/var/hosts/" + file)
 }

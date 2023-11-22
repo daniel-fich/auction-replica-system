@@ -4,20 +4,26 @@ import (
 	"sync"
 )
 
+func MakeThreadVariable[T any](val T) *ThreadVariable[T] {
+	return &ThreadVariable[T]{
+		value: val,
+	}
+}
+
 type ThreadVariable[T any] struct {
 	mu    sync.Mutex
-	Value T
+	value T
 }
 
 func (t *ThreadVariable[T]) Update(val T) {
 	t.mu.Lock()
-	t.Value = val
+	t.value = val
 	t.mu.Unlock()
 }
 
 func (t *ThreadVariable[T]) Get() T {
 	t.mu.Lock()
-	val := t.Value
+	val := t.value
 	t.mu.Unlock()
 	return val
 }

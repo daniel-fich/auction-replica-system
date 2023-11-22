@@ -7,7 +7,8 @@ import (
 
 var (
 	// HOSTNAME resolves to ip address
-	dockerId = os.Getenv("HOSTNAME")
+	dockerId   = os.Getenv("HOSTNAME")
+	currentBid = MakeThreadVariable[int64](0)
 )
 
 func main() {
