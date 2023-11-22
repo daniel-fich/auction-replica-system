@@ -7,6 +7,7 @@ And also starting the GRPC server itself.
 
 import (
 	proto "auction-replica-system/grpc"
+	. "auction-replica-system/shared"
 	"context"
 	"log"
 	"net"
@@ -14,8 +15,6 @@ import (
 
 	"google.golang.org/grpc"
 )
-
-const SERVER_PORT = 6969
 
 type Server struct {
 	proto.UnimplementedAuctionServiceServer

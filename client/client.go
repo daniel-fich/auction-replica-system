@@ -13,17 +13,8 @@ var (
 	dockerId = os.Getenv("HOSTNAME")
 )
 
-func GetLeader() string {
-	fileContents := GetFileContents(dockerId, NodesFilename)
-
-	if len(fileContents) > 0 {
-		return fileContents[0]
-	}
-	return ""
-}
-
 func randomBid(leader string) {
-	result, err := getResult(leader)
+	result, err := GetResult(leader)
 
 	if err != nil {
 		fmt.Println("Could not get result", err)
@@ -35,7 +26,7 @@ func randomBid(leader string) {
 	if bid == 1 {
 		newBid := result + rand.Int63n(15)
 		fmt.Printf("Attempting to bid %d with current highest bid being %d\n", newBid, result)
-		_, err := bidAmount(leader, newBid)
+		_, err := BidAmount(leader, newBid)
 
 		if err != nil {
 			fmt.Println("Failed to place bid: ", bid)
@@ -44,7 +35,7 @@ func randomBid(leader string) {
 }
 
 func main() {
-	current := GetLeader()
+	current := GetLeader(dockerId)
 
 	for {
 		randomBid(current)

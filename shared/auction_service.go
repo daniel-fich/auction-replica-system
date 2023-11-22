@@ -1,4 +1,4 @@
-package main
+package shared
 
 import (
 	proto "auction-replica-system/grpc"
@@ -14,7 +14,7 @@ import (
 
 const SERVER_PORT = 6969
 
-func bidAmount(serverId string, amount int64) (proto.ErrorCode, error) {
+func BidAmount(serverId string, amount int64) (proto.ErrorCode, error) {
 	conn, err := grpc.Dial(fmt.Sprintf("%s:%s", serverId, strconv.Itoa(SERVER_PORT)),
 		grpc.WithTransportCredentials(insecure.NewCredentials()))
 
@@ -37,7 +37,7 @@ func bidAmount(serverId string, amount int64) (proto.ErrorCode, error) {
 	return ack.ErrorCode, nil
 }
 
-func getResult(serverId string) (int64, error) {
+func GetResult(serverId string) (int64, error) {
 	conn, err := grpc.Dial(fmt.Sprintf("%s:%s", serverId, strconv.Itoa(SERVER_PORT)),
 		grpc.WithTransportCredentials(insecure.NewCredentials()))
 
@@ -56,4 +56,13 @@ func getResult(serverId string) (int64, error) {
 	}
 
 	return outcome.Outcome, nil
+}
+
+func GetLeader(dockerId string) string {
+	fileContents := GetFileContents(dockerId, NodesFilename)
+
+	if len(fileContents) > 0 {
+		return fileContents[0]
+	}
+	return ""
 }
