@@ -18,4 +18,8 @@ func main() {
 
 	go startServer(server)
 	WriteToSharedFile(dockerId, NodesFilename)
+
+	for {
+
+	}
 }
