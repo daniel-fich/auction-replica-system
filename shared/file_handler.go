@@ -1,6 +1,7 @@
 package shared
 
 import (
+	"errors"
 	"log"
 	"os"
 	"path/filepath"
@@ -28,6 +29,30 @@ func WriteToSharedFile(dockerId string, filename string) {
 	}
 }
 
+func ReplaceSharedFileContents(fileContents []string, filename string) {
+	sharedFilePath := GetPath(filename)
+
+	f, err := os.OpenFile(sharedFilePath,
+		os.O_CREATE|os.O_WRONLY|os.O_TRUNC,
+		0644)
+
+	if err != nil {
+		log.Println("[ReplaceSharedFileContents] Couldn't open the shared file!")
+	}
+	defer f.Close()
+	if err := f.Truncate(0); err != nil {
+		log.Println("[ReplaceSharedFileContents] Couldn't write to shared file!")
+	}
+
+	f.Seek(0, 0)
+
+	for i := 0; i < len(fileContents); i++ {
+		log.Println("Write:", fileContents[i])
+		WriteToSharedFile("My ass", filename)
+	}
+}
+
+// dockerId might be redundant
 func GetFileContents(dockerId string, filename string) []string {
 	sharedFilePath := GetPath(filename)
 
@@ -54,6 +79,53 @@ func GetFileContents(dockerId string, filename string) []string {
 		strs = strs[:len(strs)-1]
 	}
 	return strs
+}
+
+func RemoveDockerIdFromFile(dockerId string, filename string) error {
+	log.Println("RemoveDockerIdFromFile:", dockerId)
+	fileContents := GetFileContents("tmp", filename)
+
+	removeIndex, err := indexOf(fileContents, dockerId)
+
+	if err != nil {
+		return errors.New("DockerId not found in file")
+	}
+
+	newFileContents, _ := removeAtIndex(fileContents, removeIndex)
+
+	ReplaceSharedFileContents(newFileContents, filename)
+
+	return nil
+}
+
+// Finds the first instance of `str` in `arr`.
+func indexOf(arr []string, str string) (int, error) {
+	for i := 0; i < len(arr); i++ {
+		if arr[i] == str {
+			return i, nil
+		}
+	}
+
+	return -1, errors.New("String not found in array")
+}
+
+func removeAtIndex(arr []string, index int) ([]string, error) {
+
+	// add error checks...
+	newArr := make([]string, len(arr)-1)
+
+	for i, j := 0, 0; i < len(newArr); {
+		if i == index {
+			j++
+		}
+
+		newArr[i] = arr[j]
+
+		i++
+		j++
+	}
+
+	return arr, nil
 }
 
 func GetPath(file string) string {

@@ -2,7 +2,11 @@ package main
 
 import (
 	. "auction-replica-system/shared"
+	"fmt"
 	"os"
+	"time"
+
+	"math/rand"
 )
 
 var (
@@ -18,4 +22,16 @@ func main() {
 
 	go startServer(server)
 	WriteToSharedFile(dockerId, NodesFilename)
+
+	for {
+		time.Sleep(time.Second)
+		randInt := rand.Intn(20)
+		fmt.Println(randInt)
+		if randInt == 0 {
+			contents := GetFileContents("tmp", NodesFilename)
+			removeDockerId := contents[0]
+
+			RemoveDockerIdFromFile(removeDockerId, NodesFilename)
+		}
+	}
 }
