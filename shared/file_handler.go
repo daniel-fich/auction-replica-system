@@ -47,8 +47,7 @@ func ReplaceSharedFileContents(fileContents []string, filename string) {
 	f.Seek(0, 0)
 
 	for i := 0; i < len(fileContents); i++ {
-		log.Println("Write:", fileContents[i])
-		WriteToSharedFile("My ass", filename)
+		WriteToSharedFile(fileContents[i], filename)
 	}
 }
 
@@ -82,7 +81,6 @@ func GetFileContents(dockerId string, filename string) []string {
 }
 
 func RemoveDockerIdFromFile(dockerId string, filename string) error {
-	log.Println("RemoveDockerIdFromFile:", dockerId)
 	fileContents := GetFileContents("tmp", filename)
 
 	removeIndex, err := indexOf(fileContents, dockerId)
@@ -125,7 +123,7 @@ func removeAtIndex(arr []string, index int) ([]string, error) {
 		j++
 	}
 
-	return arr, nil
+	return newArr, nil
 }
 
 func GetPath(file string) string {
