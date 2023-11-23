@@ -37,13 +37,13 @@ func BidAmount(serverId string, amount int64) (proto.ErrorCode, error) {
 	return ack.ErrorCode, nil
 }
 
-func GetResult(serverId string) (int64, error) {
+func GetResult(serverId string) (*proto.Outcome, error) {
 	conn, err := grpc.Dial(fmt.Sprintf("%s:%s", serverId, strconv.Itoa(SERVER_PORT)),
 		grpc.WithTransportCredentials(insecure.NewCredentials()))
 
 	if err != nil {
 		log.Println("Could not connect to server: ", serverId)
-		return 0, errors.New("Could not connect to server: " + serverId)
+		return nil, errors.New("Could not connect to server: " + serverId)
 	}
 
 	auctionClient := proto.NewAuctionServiceClient(conn)
@@ -52,10 +52,10 @@ func GetResult(serverId string) (int64, error) {
 
 	if err != nil {
 		log.Println("Could not get result from server: ", serverId, " ", err)
-		return 0, errors.New("Could not get result from server: " + serverId)
+		return nil, errors.New("Could not get result from server: " + serverId)
 	}
 
-	return outcome.Outcome, nil
+	return outcome, nil
 }
 
 func GetLeader(dockerId string) string {

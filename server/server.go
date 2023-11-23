@@ -40,8 +40,7 @@ func synchronize() {
 
 					currentHighest := currentBid.Get()
 
-					if result == currentHighest {
-						log.Printf("Bid matches between %s and %s, bid: %d\n", dockerId, backupHostname, currentHighest)
+					if result.Outcome == currentHighest {
 						continue
 					}
 
@@ -91,6 +90,7 @@ func main() {
 	go randomCrash()
 	go synchronize()
 	go startTimeServer(TimeService{})
+	go PollTime()
 	for {
 	}
 }

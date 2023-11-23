@@ -1,8 +1,9 @@
 package main
 
 import (
+	proto "auction-replica-system/grpc"
 	. "auction-replica-system/shared"
-	"fmt"
+	"log"
 	"math/rand"
 	"os"
 	"time"
@@ -17,27 +18,31 @@ func randomBid(leader string) {
 	result, err := GetResult(leader)
 
 	if err != nil {
-		fmt.Println("Could not get result", err)
+		log.Println("Could not get result", err)
+		return
+	}
+
+	if result.OutcomeType == proto.OutcomeType_RESULT {
+		log.Printf("Result has been recieved outcome is %d\n", result.Outcome)
 		return
 	}
 
 	// Our random bid will only bid one fourth of the time
 	bid := rand.Int63n(4)
 	if bid == 1 {
-		newBid := result + rand.Int63n(15)
-		fmt.Printf("Attempting to bid %d with current highest bid being %d\n", newBid, result)
+		newBid := result.Outcome + rand.Int63n(15)
+		log.Printf("Attempting to bid %d with current highest bid being %d to leader %s\n", newBid, result, leader)
 		_, err := BidAmount(leader, newBid)
 
 		if err != nil {
-			fmt.Println("Failed to place bid: ", bid)
+			log.Printf("Failed to place bid: %d", newBid)
 		}
 	}
 }
 
 func main() {
-	current := GetLeader(dockerId)
-
 	for {
+		current := GetLeader(dockerId)
 		randomBid(current)
 		time.Sleep(3 * time.Second)
 	}

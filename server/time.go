@@ -36,7 +36,7 @@ func SetExpiration() {
 			if err != nil {
 				log.Fatal("Failed to get end time for auction. Server shutting down...")
 			}
-			expiration = response.Time.Add(time.Second * 30)
+			expiration = response.Time.Add(time.Second * 10)
 			isExpirationSet = true
 			for _, id := range GetFileContents(dockerId, NodesFilename) {
 				if id != dockerId {
@@ -94,6 +94,7 @@ func startTimeServer(server TimeService) {
 func (t *TimeService) SetTime(ctx context.Context, in *proto.Time) (*proto.EmptyMessage, error) {
 	expiration = time.Unix(int64(in.Time), 0)
 	isExpirationSet = true
+	log.Println("Time has been set to", expiration.Format("hh:mm:ss"))
 	return &proto.EmptyMessage{}, nil
 }
 
