@@ -94,7 +94,7 @@ func startTimeServer(server TimeService) {
 func (t *TimeService) SetTime(ctx context.Context, in *proto.Time) (*proto.EmptyMessage, error) {
 	expiration = time.Unix(int64(in.Time), 0)
 	isExpirationSet = true
-	log.Println("Time has been set to", expiration.Format("hh:mm:ss"))
+	log.Println("Time has been set to", expiration.Format(time.StampNano))
 	return &proto.EmptyMessage{}, nil
 }
 

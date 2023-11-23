@@ -31,7 +31,7 @@ func randomBid(leader string) {
 	bid := rand.Int63n(4)
 	if bid == 1 {
 		newBid := result.Outcome + rand.Int63n(15)
-		log.Printf("Attempting to bid %d with current highest bid being %d to leader %s\n", newBid, result, leader)
+		log.Printf("Attempting to bid %d with current highest bid being %d to leader %s\n", newBid, result.Outcome, leader)
 		_, err := BidAmount(leader, newBid)
 
 		if err != nil {
@@ -41,6 +41,8 @@ func randomBid(leader string) {
 }
 
 func main() {
+	time.Sleep(time.Second * 5)
+
 	for {
 		current := GetLeader(dockerId)
 		randomBid(current)

@@ -90,6 +90,8 @@ func main() {
 	go randomCrash()
 	go synchronize()
 	go startTimeServer(TimeService{})
+	time.Sleep(time.Second)
+	go SetExpiration()
 	go PollTime()
 	for {
 	}
