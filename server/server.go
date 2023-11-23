@@ -62,7 +62,7 @@ func synchronize() {
 func randomCrash() {
 	for {
 		time.Sleep(5 * time.Second)
-		shouldExit := rand.Int63n(10)
+		shouldExit := rand.Int63n(20)
 
 		if shouldExit == 1 {
 			log.Fatal("Oh no! Something awful happened to my server, I spilled coffee all over it!")
@@ -91,7 +91,7 @@ func main() {
 	go synchronize()
 	go startTimeServer(TimeService{})
 	time.Sleep(time.Second)
-	go SetExpiration()
+	SetExpiration()
 	go PollTime()
 	for {
 	}

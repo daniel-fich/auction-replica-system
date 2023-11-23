@@ -36,7 +36,7 @@ func SetExpiration() {
 			if err != nil {
 				log.Fatal("Failed to get end time for auction. Server shutting down...")
 			}
-			expiration = response.Time.Add(time.Second * 10)
+			expiration = response.Time.Add(time.Second * 30)
 			isExpirationSet = true
 			for _, id := range GetFileContents(dockerId, NodesFilename) {
 				if id != dockerId {
@@ -104,7 +104,8 @@ func PollTime() {
 		if isExpirationSet {
 			response, err := ntp.Query("0.dk.pool.ntp.org")
 			if err != nil {
-				log.Fatal("Failed to get time from ntp server. Server shutting down...")
+				log.Println("Failed to get time from ntp server.")
+				continue
 			}
 			if response.Time.After(expiration) {
 				isAuctionOver.Update(true)

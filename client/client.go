@@ -41,7 +41,7 @@ func randomBid(leader string) {
 }
 
 func main() {
-	time.Sleep(time.Second * 5)
+	time.Sleep(time.Second * 2)
 
 	for {
 		current := GetLeader(dockerId)
