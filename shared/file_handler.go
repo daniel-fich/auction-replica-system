@@ -81,7 +81,7 @@ func GetFileContents(dockerId string, filename string) []string {
 }
 
 func RemoveDockerIdFromFile(dockerId string, filename string) error {
-	fileContents := GetFileContents("tmp", filename)
+	fileContents := GetFileContents("Unknown DockerId", filename)
 
 	removeIndex, err := indexOf(fileContents, dockerId)
 

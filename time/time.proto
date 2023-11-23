@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package time;
+
+option go_package = "time/time";
+
+message Time {
+    uint64 time = 1;
+}
+
+message EmptyMessage {}
+
+
+service TimeService {
+    rpc SetTime(Time) returns (EmptyMessage);
+}

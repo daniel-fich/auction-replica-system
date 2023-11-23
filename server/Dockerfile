@@ -8,5 +8,6 @@ RUN go mod download && go mod verify
 COPY . .
 
 EXPOSE 6969
+EXPOSE 420
 
 CMD ["go", "run", "./server/"]

@@ -18,13 +18,21 @@ func CheckPeers() {
 		contents := GetFileContents(dockerId, NodesFilename)
 
 		for _, id := range contents {
-			conn, err := net.DialTimeout("tcp", fmt.Sprintf("%s:%s", id, strconv.Itoa(SERVER_PORT)), time.Millisecond*100)
-			if err != nil {
-				log.Println("Server is dead removing!:", id)
-				// remove stuff
-				continue
+			if id != dockerId {
+				conn, err := net.DialTimeout("tcp", fmt.Sprintf("%s:%s", id, strconv.Itoa(SERVER_PORT)), time.Millisecond*100)
+				defer conn.Close()
+
+				if err != nil {
+					log.Println("Server crash! Immediately removing:", id)
+					err := RemoveDockerIdFromFile(id, NodesFilename)
+					if err != nil {
+						log.Println("Failed to remove crashed server from file!")
+					}
+
+					continue
+				}
+				conn.Close()
 			}
-			conn.Close()
 		}
 	}
 }

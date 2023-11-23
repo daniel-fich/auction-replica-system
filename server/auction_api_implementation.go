@@ -31,10 +31,17 @@ func (s *Server) Bid(ctx context.Context, in *proto.Amount) (*proto.Ack, error) 
 }
 
 func (s *Server) Result(ctx context.Context, in *proto.EmptyArgument) (*proto.Outcome, error) {
-	return &proto.Outcome{
-		OutcomeType: proto.OutcomeType_RESULT,
-		Outcome:     currentBid.Get(),
-	}, nil
+	if isAuctionOver.Get() {
+		return &proto.Outcome{
+			OutcomeType: proto.OutcomeType_RESULT,
+			Outcome:     currentBid.Get(),
+		}, nil
+	} else {
+		return &proto.Outcome{
+			OutcomeType: proto.OutcomeType_HIGHEST_BID,
+			Outcome:     currentBid.Get(),
+		}, nil
+	}
 }
 
 func startServer(server Server) {
