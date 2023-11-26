@@ -51,7 +51,6 @@ func main() {
 	time.Sleep(time.Second)
 
 	go CheckPeers()
-	go synchronize()
 	go startTimeServer()
 	time.Sleep(time.Second)
 	SetExpiration()
