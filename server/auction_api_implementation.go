@@ -25,6 +25,7 @@ func (s *Server) Bid(ctx context.Context, in *proto.Amount) (*proto.Ack, error) 
 	if currentBid.Get() < in.Amount {
 		currentBid.Update(in.Amount)
 	}
+	synchronize()
 	return &proto.Ack{
 		ErrorCode: proto.ErrorCode_SUCCESS,
 	}, nil
@@ -62,5 +63,43 @@ func startServer(server Server) {
 
 	if serveError != nil {
 		log.Fatal("Could not serve listener")
+	}
+}
+
+func synchronize() {
+	currentLeader, err := GetCurrentLeader()
+	if err != nil {
+		log.Fatal("Cannot start when there's no leader!")
+	}
+
+	// Only the leader will backup the other servers
+	if dockerId == currentLeader {
+		fileContents := GetFileContents(dockerId, NodesFilename)
+
+		for _, backupHostname := range fileContents {
+			// We don't want to backup to ourselves
+			if backupHostname != dockerId {
+				result, err := GetResult(backupHostname)
+
+				if err != nil {
+					log.Printf("Failed to get result on hostname %s\n", backupHostname)
+					continue
+				}
+
+				currentHighest := currentBid.Get()
+
+				if result.Outcome == currentHighest {
+					continue
+				}
+
+				_, err = BidAmount(backupHostname, currentHighest)
+
+				if err != nil {
+					log.Printf("Failed to backup bid %d on hostname %s\n", currentHighest, backupHostname)
+				}
+
+				// TODO fail when X hostnames didn't backup
+			}
+		}
 	}
 }

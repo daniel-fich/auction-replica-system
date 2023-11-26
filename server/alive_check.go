@@ -19,7 +19,7 @@ func CheckPeers() {
 
 		for _, id := range contents {
 			if id != dockerId {
-				conn, err := net.DialTimeout("tcp", fmt.Sprintf("%s:%s", id, strconv.Itoa(SERVER_PORT)), time.Millisecond*100)
+				conn, err := net.DialTimeout("tcp", fmt.Sprintf("%s:%s", id, strconv.Itoa(SERVER_PORT)), time.Second*2)
 
 				if err != nil {
 					log.Println("Server crash! Immediately removing:", id)

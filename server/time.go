@@ -70,7 +70,7 @@ func SetTime(serverId string) error {
 	return nil
 }
 
-func startTimeServer(server TimeService) {
+func startTimeServer() {
 	grpcServer := grpc.NewServer()
 
 	// Make the server listen at the given port (convert int port to string)
@@ -83,7 +83,7 @@ func startTimeServer(server TimeService) {
 	log.Printf("Started server at port: %d\n", TIME_SERVER_PORT)
 
 	// Register the grpc server and serve its listener
-	proto.RegisterTimeServiceServer(grpcServer, &server)
+	proto.RegisterTimeServiceServer(grpcServer, &TimeService{})
 	serveError := grpcServer.Serve(listener)
 
 	if serveError != nil {
@@ -104,7 +104,7 @@ func PollTime() {
 		if isExpirationSet {
 			response, err := ntp.Query("0.dk.pool.ntp.org")
 			if err != nil {
-				log.Println("Failed to get time from ntp server.")
+				// log.Println("Failed to get time from ntp server.")
 				continue
 			}
 			if response.Time.After(expiration) {
